@@ -13,6 +13,14 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => ['jwt.auth']], function() {
+    Route::GET('profile', 'UserController@getAuthenticatedUser');
+
+    Route::GET('favorite/store/{id}', 'DataController@store'); //Only works with GET?
+    Route::GET('favorites', 'DataController@show');
+    Route::GET('favorite/check/{id}', 'DataController@check');
+    Route::DELETE('favorite/delete/{id}', 'DataController@delete');
 });
+
+Route::POST('register', 'UserController@register');
+Route::POST('login', 'UserController@login');
